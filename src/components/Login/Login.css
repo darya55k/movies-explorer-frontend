@@ -1,0 +1,27 @@
+.login {
+    width: calc(100% - 442px*2);
+    padding: 70px 0;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.login__fields {
+    margin-bottom: 155px;
+}
+
+@media(max-width: 1279px) {
+    .login {
+        width: 396px;
+    }
+}
+
+@media(max-width: 767px) {
+    .login {
+        width: 260px;
+    }
+    .logo{
+        margin: 0 auto;
+    }
+}
