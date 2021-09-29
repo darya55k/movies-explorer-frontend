@@ -5,7 +5,6 @@
 }
 .movies__list-item{
     display: flex;
-    width: 1140px;
     background-color: #F9F9F9;
     justify-content: space-between;
 }
@@ -78,10 +77,6 @@
     .movies{
         padding: 30px 60px 80px 40px;
     }
-    .movies__list-item{
-        max-width: 708px;
-        
-    }
     .movies__list-poster {
         width: 220px;
         height: 122px;
@@ -89,7 +84,7 @@
 }
 @media screen and (max-width: 767px) {
     .movies{
-        max-width: 320px;
+        display: flex;
         padding: 40px 10px 20px 10px;
     }
     .movies__list {

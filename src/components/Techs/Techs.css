@@ -55,7 +55,6 @@
 }
 @media screen and (max-width: 1279px) {
     .techs {
-        max-width: 768px;
         margin: 0 auto;
         padding: 90px 50px;
     }
@@ -74,7 +73,6 @@
 }
 @media screen and (max-width: 767px) {
     .techs {
-        max-width: 320px;
         margin: 0 auto;
         padding: 70px 18px;
         background: white;

@@ -7,13 +7,4 @@ body {
     max-width: 1280px;
     margin: auto;
 }
-@media screen and (max-width: 1279px) {
-    .page{
-        max-width: 768px;
-    }
-}
-@media screen and (max-width: 767px) {
-    .page{
-        max-width: 320px;
-    }
-}
+

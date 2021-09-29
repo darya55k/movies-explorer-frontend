@@ -91,7 +91,6 @@
 }
 @media screen and (max-width: 1279px) {
     .about-project {
-        max-width: 768px;
         margin: 0 auto;
         padding: 90px 50px;
     }
@@ -107,15 +106,10 @@
 }
 @media screen and (max-width: 767px) {
     .about-project {
-        max-width: 320px;
         margin: 0 auto;
         padding: 70px 18px;
     }
-    .about-project__info-text {
-        max-width: 284px;
-    }
     .about-project__info_card {
-        max-width: 284px;
         margin-bottom: 56px;
     }
     .section__heading {
