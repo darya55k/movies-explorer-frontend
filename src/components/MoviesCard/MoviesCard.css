@@ -13,6 +13,7 @@
 .movies__list-description {
     margin: 14px 0 5px 0;
     min-height: 36px;
+    padding-left: 22px;
 }
 
 .movies__list-title {
@@ -109,6 +110,7 @@
     }
     .movies__list-description{
         position: relative;
+        padding-left: 12px;
     }
     .movies__list-item{
         flex-direction: column-reverse;
@@ -127,5 +129,11 @@
     }
     .movies__more-button{
         width: 240px;
+    }
+    .movies__list-delete-button_visible{
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding-right: 26px;
     }
 }

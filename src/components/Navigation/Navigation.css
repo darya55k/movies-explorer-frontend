@@ -32,7 +32,6 @@
 }
 
 .header__link_type_login {
-    color: #FFFFFF;
     background-color: #2BE080;
     padding: 8px 20px;
     transition: opacity 0.3s ease-in-out;
@@ -217,5 +216,8 @@
 
     .header__burger-menu-links {
         padding: 144px 10px 46px 10px;
+    }
+    .header__burger-menu-link_type_account {
+    margin-top: 444px;
     }
 }
