@@ -31,7 +31,7 @@ function SearchForm(props) {
                         <input type="text" name="search" placeholder="Фильм" className="search__form-input"
                                value={search || ''} onChange={handleSearchChange}
                                required/>
-                        <span className={`search__form-error ${isSearchValid ? 'search__form-error_hidden' : ''}`}>Нужно ввести ключевое слово</span>
+                        <span className={`search__form-error ${isSearchValid ? 'search__form-error_hidden' : ''}`}></span>
                     </fieldset>
 
                     <button className="search__form-button" type="submit">Найти</button>
