@@ -161,7 +161,6 @@ function App() {
                         const searchResult = handleSearchMovies(movies, keyWord);
 
                         if(searchResult.length === 0) {
-                            setIsSearching(false);
                             setNotFound(true);
                             setMovies([]);
                         } else {
