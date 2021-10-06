@@ -122,13 +122,27 @@ function App() {
     }
 
     
-        function handleSearchMovies (movies) {
-            const shortMoviesArray = movies.filter(
-                (movie) => movie.duration <= 40
-            );
-            return shortMoviesArray;
-        }
-            
+    function handleSearchMovies(movies, keyWord) {
+        let filteredMovies = [];
+
+        movies.forEach((movie) => {
+            if(movie.nameRU.filter(keyWord) > -1) {
+
+                if(isShortMoviesChecked) {
+
+                    if(movie.duration <= 40) {
+                        return filteredMovies.push(movie);
+                    }
+                    return
+                }
+
+                return filteredMovies.push(movie);
+            }
+        })
+
+        return filteredMovies;
+    }
+
 
     function searchSavedMovies(keyWord) {
         const allSavedMovies = JSON.parse(localStorage.getItem('savedMovies'));
