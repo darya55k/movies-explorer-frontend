@@ -127,8 +127,7 @@ function App() {
         let filteredMovies = [];
 
         movies.forEach((movie) => {
-            if(movie.nameRU.indexOf(keyWord) > -1) {
-
+        
                 if(isShortMoviesChecked) {
 
                     if(movie.duration <= 40) {
@@ -139,7 +138,7 @@ function App() {
 
                 return filteredMovies.push(movie);
             }
-        })
+        )
 
         return filteredMovies;
     }
