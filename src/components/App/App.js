@@ -124,14 +124,13 @@ function App() {
     
     
     function handleSearchMovies(movies) {
-        if(isShortMoviesChecked){
         const shortMoviesArray = movies.filter(
             (movie) => movie.duration <= 40
         );
         
         return shortMoviesArray;
     }
-}
+
 
 
     function searchSavedMovies(keyWord) {
