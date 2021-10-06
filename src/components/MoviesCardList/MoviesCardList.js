@@ -75,6 +75,6 @@ function MoviesCardList(props) {
               onClick={handleMoviesIncrease} >Еще</button>
         </section>
     )
-}
 
+            }
 export default MoviesCardList;
