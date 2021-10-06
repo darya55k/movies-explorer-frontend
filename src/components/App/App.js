@@ -136,7 +136,7 @@ function App() {
 
     function searchSavedMovies(keyWord) {
         const allSavedMovies = JSON.parse(localStorage.getItem('savedMovies'));
-        const searchSavedResult = handleSearchMovies(allSavedMovies, keyWord);
+        const searchSavedResult = handleSearchMovies(allSavedMovies);
         setSavedMovies(searchSavedResult);
     }
 
@@ -150,7 +150,7 @@ function App() {
                 moviesApi.getMovies()
                     .then((movies) => {
                         setAllMovies(movies)
-                        const searchResult = handleSearchMovies(movies, keyWord);
+                        const searchResult = handleSearchMovies(movies);
 
                         if(searchResult.length === 0) {
                             setNotFound(true);
@@ -169,7 +169,7 @@ function App() {
                         setIsShortMoviesChecked(false);
                     })
             } else {
-                const searchResult = handleSearchMovies(allMovies, keyWord);
+                const searchResult = handleSearchMovies(allMovies);
 
                 if(searchResult.length === 0) {
                     setNotFound(true);
