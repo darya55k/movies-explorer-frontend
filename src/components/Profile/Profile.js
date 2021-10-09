@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import "./Profile.css";
 import Header from "../Header/Header";
+import Preloader from "../Preloader/Preloader";
 import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 
 function Profile({ loggedIn, onSignOut, onUpdateUser, serverResponse, isActive }) {
@@ -38,20 +39,19 @@ function Profile({ loggedIn, onSignOut, onUpdateUser, serverResponse, isActive }
                         <div className="profile__form-input">
                             <p className="profile__form-input-name">Email</p>
                             <input value={values.email || ""} onChange={handleChange} className="profile__form-input-field" type="email" name="email" />
+                            
                         </div>
+                        <span className="profile__form-error">{errors.email}</span>
                     </fieldset>
-                    <span className="form__error profile__error">{errors.email}</span>
-                    <button className="profile__button profile__button_type_edit" tape="submit" aria-label="Редактировать" disabled={!isValid}>
-                        Редактировать
-                    </button>
-                </form>
-                {!checkValuesInput() || isDisable ? (
-                    <Link to="/" className="profile__signout-link" onClick={onSignOut}>
-                        Выйти из аккаунта
-                    </Link>
-                ) : (
-                    ""
-                )}
+                    <p className={`profile__respons ${serverResponse && 'profile__respons_type_success'}`}>{serverResponse.message}</p>
+                    
+                    { !checkValuesInput() || isDisable
+            ? <button type="submit" className="profile__button" disabled={true}>Редактировать</button>
+            : <button type="submit" className="profile__button" disabled={!isValid}>{isActive ? <Preloader isActive={isActive} isAuth={true} /> : 'Редактировать'}</button> }
+        </form>
+        {
+          !checkValuesInput() || isDisable ? (<Link to="/" className="profile__signout-link" onClick={onSignOut}>Выйти из аккаунта</Link>) : ''
+        }
             </section>
         </>
     );

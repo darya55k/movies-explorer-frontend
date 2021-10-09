@@ -102,7 +102,7 @@ export class MainApi {
 }
 
 const mainApi = new MainApi({
-  url: 'https://movies.darya55k.nomoredomains.club',
+  url: 'http://localhost:3001',
   headers: {
     'Content-Type': 'application/json'
   }
