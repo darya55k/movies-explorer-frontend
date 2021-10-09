@@ -1,80 +1,79 @@
+import React from 'react';
 import './MoviesCardList.css';
-import MoviesCard from "../MoviesCard/MoviesCard";
-import Preloader from "../Preloader/Preloader";
-import React from "react";
 
-function MoviesCardList(props) {
-    const [initialCardsNumber, setInitialCardsNumber] = React.useState(() => {
-        const windowSize = window.innerWidth;
-        if(windowSize < 720) {
-            return 5
-        } else if(windowSize < 920) {
-            return 8
-        } else if(windowSize < 1279) {
-            return 12 }
-        else if(windowSize > 1279) {
-            return 12
-        }
-    } );
-    const [moreCardsNumber, setMoreCardsNumber] = React.useState(() => {
-        const windowSize = window.innerWidth;
-        if(windowSize < 720) {
-            return 2;
-        } else if(windowSize < 920) {
-            return 2
-        } else if(windowSize < 1279) {
-            return 3
-        } else if(windowSize > 1279) {
-            return 4
-        }
+import MoviesCard from '../MoviesCard/MoviesCard';
+import { NUMBER_CARDS } from '../../utils/constants';
+
+function MoviesCardList({movies, saved, errorServer, onMovieSave, onMovieDelete, notFoundMovies, notFoundSavedMovies}) {
+  const [screenWidth, setScreenWidth] = React.useState(0);
+  const [numberInitialCards, setNumberInitialCards] = React.useState(0);
+  const [numberAddCards, setNumberAddCards] = React.useState(0);
+
+  function checkNumberCardsOnPage(width) {
+    if (width >= NUMBER_CARDS.laptopScreen.width) {
+      return NUMBER_CARDS.laptopScreen;
+    } else if (width >= NUMBER_CARDS.tabletScreen.width) {
+      return NUMBER_CARDS.tabletScreen;
+    } else if (width >= NUMBER_CARDS.mobileScreen.width) {
+      return NUMBER_CARDS.mobileScreen;
+    }
+  }
+
+  React.useEffect(() => {
+    let timer = null;
+
+    function resizeHandler() {
+      clearTimeout(timer);
+      timer = setTimeout(() => setScreenWidth(window.screen.width), 800);
+    }
+
+    window.addEventListener('resize', resizeHandler);
+  }, []);
+
+  React.useEffect(() => {
+    const cardsOnPage = checkNumberCardsOnPage(window.screen.width);
+    setNumberInitialCards(cardsOnPage.initialCards);
+    setNumberAddCards(cardsOnPage.addCards);
+  }, [screenWidth]);
+
+  const newList = !saved ? movies.slice(0, numberInitialCards) : movies;
+
+  function addMoreCards() {
+    setNumberInitialCards(numberCards => {
+      return numberCards + numberAddCards;
     });
+  }
 
-    function handleScreenWidth () {
-        const windowSize = window.innerWidth;
-        if(windowSize < 720) {
-            setInitialCardsNumber(5)
-        } else if(windowSize < 920) {
-            setInitialCardsNumber(8)
-        } else if(windowSize < 1279) {
-            setInitialCardsNumber(12)
-        } else if(windowSize > 1279) {
-            setInitialCardsNumber(12)
-        }
-    }
+  return (
+    <section className="movies page__section">
+      { saved ? <p className={`movies__not-found ${notFoundSavedMovies ? '' : 'movies__not-found_invisible'}`}>В сохраненных фильмах ничего не найдено</p>
+              : <p className={`movies__not-found ${notFoundMovies ? '' : 'movies__not-found_invisible'}`}>Ничего не найдено</p> }
 
-    const displayedMovies = props.movies?.slice(0, initialCardsNumber);
-
-    function handleMoviesIncrease() {
-        setInitialCardsNumber(prevState => {return prevState + moreCardsNumber});
-    }
-
-    React.useEffect(() => {
-        window.addEventListener('resize', handleScreenWidth);
-    }, []);
-
-    return (
-        <section className="movies">
-            <Preloader isSearching={props.isSearching} />
-            <span className={`movies__error ${props.isErrorActive ? '' : 'no-display'}`}>Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз</span>
-            <span className={`movies__not-found ${props.notFound ? '' : 'no-display'}`}>Ничего не найдено</span>
-            <span className={`movies__no-saved ${(props.saved && props.movies.length === 0) ? '' : 'no-display'}`}>Вы пока что ничего не добавили в избранное</span>
-            <ul className="movies__list">
-
-                {displayedMovies?.map((movie) => {
-                        return (
-                            <MoviesCard movie={movie} key={props.saved ? movie.movieId : movie.id} saved={props.saved}
-                                        onMovieSave={props.onMovieSave} onDeleteMovie={props.onDeleteMovie}
-                                            savedMovies={props.savedMovies}/>
-                        )
-                    })
-                }
-            </ul>
-
-            <button className={props.saved ? 'movies__more-button movies__more-button_invisible' :
-                `movies__more-button ${props.movies?.length === displayedMovies?.length ? 'movies__more-button_invisible' : ''}`}
-              onClick={handleMoviesIncrease} >Еще</button>
-        </section>
-    )
-
+      <p className={`movies__not-found ${!errorServer && 'movies__not-found_invisible'}`}>Во время запроса произошла ошибка. Возможно,
+                    проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.</p>
+      {
+        movies.length !== 0 &&
+          (<div className="movies__list">
+            {
+              newList.map(item => (
+                <MoviesCard
+                    key={saved ? item._id : item.id}
+                    movie={item}
+                    saved={saved}
+                    onMovieSave={onMovieSave}
+                    onMovieDelete={onMovieDelete}
+                  />
+                )
+              )
             }
+          </div>)
+      }
+      
+      <div className="movies__button-area">
+        { movies.length !== newList.length && (<button type="button" className={`movies__more-button ${saved && 'movies__more-button_invisible'}`} onClick={addMoreCards}>Ещё</button>) }
+      </div>
+    </section>
+  );
+}
+
 export default MoviesCardList;

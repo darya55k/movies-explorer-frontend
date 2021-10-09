@@ -1,48 +1,44 @@
-import './SearchForm.css';
-import search__icon from '../../images/search_icon.svg';
-import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
 import React from "react";
+import "./SearchForm.css";
+//import FilterCheckbox from "../FilterCheckbox/FilterCheckbox";
+import search__icon from "../../images/search_icon.svg";
+import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 
-function SearchForm(props) {
-    const [search, setSearch] = React.useState('');
-    const [isSearchValid, setIsSearchValid] = React.useState(true);
+function SearchForm({ onSubmit, onHandleCheckbox }) {
+    const { values, handleChange, errors, isValid } = useFormWithValidation();
 
-    function handleSearchChange(e) {
-        setSearch(e.target.value);
-        setIsSearchValid(e.target.checkValidity())
-    }
-
-    function handleSearchSavedMovies(e) {
+    function handleSubmit(e) {
         e.preventDefault();
-
-        props.onSearchSavedMovies(search);
+        onSubmit(values.searchInput);
     }
 
-    function handleSearchMovies(e) {
-        e.preventDefault();
-
-        props.onSearchMovies(search);
-    }
     return (
         <section className="search">
-            <form className="search__form" onSubmit={props.saved ? handleSearchSavedMovies : handleSearchMovies}>
-                    <img src={search__icon} alt="Поиск" className="search__icon"/>
+            <form className="search__form" name="search" noValidate onSubmit={handleSubmit}>
+                <div className="search__films">
+                    <img src={search__icon} alt="Поиск" className="search__icon" />
                     <fieldset className="search__form-fields">
-                        <input type="text" name="search" placeholder="Фильм" className="search__form-input"
-                               value={search || ''} onChange={handleSearchChange}
-                               required/>
-                        <span className={`search__form-error ${isSearchValid ? 'search__form-error_hidden' : ''}`}></span>
+                        <input value={values.searchInput || ""} onChange={handleChange} type="text" name="searchInput" className="search__form-input" placeholder="Фильм" required />
                     </fieldset>
+                </div>
 
-                    <button className="search__form-button" type="submit">Найти</button>
-                    <span className="search__toggle-border"/>
+                <div className="search__box">
+                    <button className="search__form-button" disabled={!isValid}>
+                        Найти
+                    </button>
+                    <span className="search__toggle-border" />
                     <div className="search__toggle-box">
-                        <FilterCheckbox onChange={props.onShortMoviesCheck} isChecked={props.isChecked}/>
+                        <label className="search__toggle-label">
+                            <input type="checkbox" className="search__toggle" onClick={onHandleCheckbox} />
+                            <span className="search__toggle_visible"></span>
+                        </label>
                         <h3 className="search__toggle-text">Короткометражки</h3>
                     </div>
+                </div>
             </form>
+            <span className="search__form-error">{errors.searchInput}</span>
         </section>
-    )
+    );
 }
 
 export default SearchForm;

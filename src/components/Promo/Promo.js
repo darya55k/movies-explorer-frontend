@@ -11,8 +11,9 @@ function Promo() {
                 </div>
                 <img alt="Фон" className="promo__image" src={promo} />
             </div>
-            <button className="promo__button">Узнать больше</button>
-        </section>
+        
+             <a href="#aboutProject" className="promo__button">Узнать больше</a>
+       </section>
     );
 }
 

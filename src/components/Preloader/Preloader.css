@@ -90,3 +90,24 @@
     background: #FF6838;
     animation: preloader-inside-red 1s ease-in-out infinite;
 }
+.preloader__inactive{
+    display: none;
+}
+.preloader_small {
+    padding: 0;
+}
+  .preloader__container_small {
+    width: 35px;
+    height: 35px;
+}
+.preloader__round_small {
+    width: 35px;
+    height: 35px;
+}
+  
+.preloader__round_small::after,
+.preloader__round_small::before {
+    width: 35px;
+    height: 35px;
+}
+  

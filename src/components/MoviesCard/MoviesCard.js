@@ -1,83 +1,64 @@
-import "./MoviesCard.css";
-import movieImage from "../../images/movie.jpg";
-import React from "react";
-import {useLocation} from 'react-router-dom';
+import React from 'react';
+import './MoviesCard.css';
 
-function MoviesCard(props) {
-    const [isDeleteButtonVisible, setIsDeleteButtonVisible] = React.useState(false);
-    const [isSaved, setIsSaved] = React.useState(false);
+import { setTimeFormat } from '../../utils/utils';
 
-    const movie = {
-        country : props.movie.country || 'Не указано',
-        director: props.movie.director || 'Не указано',
-        duration: props.movie.duration || 0,
-        year: props.movie.year || 'Не указано',
-        description: props.movie.description || 'Не указано',
-        image: `${props.movie.image === null ? `${movieImage}` : `https://api.nomoreparties.co${props.movie.image?.url}`}`,
-        trailer: props.movie?.trailerLink,
-        nameRU: props.movie.nameRU || 'Не указано',
-        nameEN: props.movie.nameEN || 'Не указано',
-        thumbnail: `${props.movie.image === null ? `${movieImage}` : `https://api.nomoreparties.co${props.movie.image?.formats?.thumbnail?.url}`}`,
-        movieId: props.movie.id,
+function MoviesCard({movie, saved, onMovieSave, onMovieDelete}) {
+  const [isSaved, setIsSaved] = React.useState(false);
+  const [isBtnDelete, setisBtnDelete] = React.useState(false);
+
+  const name = movie.nameRU;
+  const linkImage = `${saved ? movie.image : `https://api.nomoreparties.co${movie.image.url}`}`;
+  const trailerLink = movie.trailerLink;
+  const duration = movie.duration;
+  const savedMovie = JSON.parse(localStorage.getItem('savedMovies')).find((item) => item.nameRU === movie.nameRU);
+
+  function handleMouseEnter() {
+    setisBtnDelete(true);
+  }
+
+  function handleMouseLeave() {
+    setisBtnDelete(false);
+  }
+
+  function handleMovieDeleteClick() {
+    if(saved) {
+      onMovieDelete(movie._id);
+    } else {
+      onMovieDelete(savedMovie._id);
+      setIsSaved(false);
     }
+  }
 
-    const editedDuration = `${Math.trunc(movie.duration/60)}ч${movie.duration % 60}м`;
-    const image = `${props.movie.image === null ? `${movieImage}` : `https://api.nomoreparties.co${props.movie.image?.url}`}`;
-    const savedMovies = JSON.parse(localStorage.getItem('savedMovies'));
-    const currentMovie = savedMovies.find((movie) => movie.nameRU === props.movie.nameRU);
-
-    const location = useLocation();
-
-    function handleCardMouseOver() {
-        setIsDeleteButtonVisible(true);
+  function handleMovieLikeClick() {
+    if(isSaved) {
+      handleMovieDeleteClick();
+    } else {
+      onMovieSave(movie);
+      setIsSaved(!isSaved);
     }
+  }
 
-    function handleCardMouseOut() {
-        setIsDeleteButtonVisible(false);
-    }
+  React.useEffect(() => {
+    savedMovie ? setIsSaved(true) : setIsSaved(false);
+  }, [savedMovie]);
 
-    function handleLikeButtonCLick() {
-            props.onMovieSave(movie);
-            setIsSaved(true);
-    }
-
-    function handleDisLike() {
-        setIsSaved(false);
-        console.log(currentMovie)
-        props.onDeleteMovie(currentMovie._id);
-    }
-
-    function handleDeleteMovie() {
-        props.onDeleteMovie(props.movie._id);
-        setIsSaved(false);
-    }
-
-    React.useEffect(() => {
-        if(currentMovie) {
-            setIsSaved(true)
+  return (
+    <li className="movies__list-item">
+      
+      <div className="movies__list-description" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <h2 className="movies__list-title">{name}</h2>
+        <p className="movies__list-duration">{setTimeFormat(duration)}</p>
+        {
+          saved ? <button type="button" className={`movies__list-delete-button ${isBtnDelete && 'movies__list-delete-button_visible'}`} onClick={handleMovieDeleteClick}></button>
+                : <button type="button" className={`movies__list-like-button ${isSaved ? 'movies__list-like-button_clicked' : ''}`} onClick={handleMovieLikeClick} ></button>
         }
-
-    }, [currentMovie, location])
-
-
-    return (
-        <li className="movies__list-item">
-            <a href={props.saved ? props.movie.trailer : props.movie.trailerLink} className="movies__trailer-link">
-                <img alt={props.movie.nameRU} src={props.saved ? props.movie.image : image} className="movies__list-poster"/>
-            </a>
-
-            <div onMouseEnter={handleCardMouseOver} onMouseLeave={handleCardMouseOut} className="movies__list-description">
-                <p className="movies__list-title">{props.movie.nameRU}</p>
-
-                {props.saved ?
-                    <button className={`movies__list-delete-button ${isDeleteButtonVisible ? 'movies__list-delete-button_visible' : ''}`}
-                        onClick={handleDeleteMovie}></button> :
-                    <button className={`movies__list-like-button ${isSaved ? 'movies__list-like-button_clicked' : ''}`} onClick={isSaved ? handleDisLike : handleLikeButtonCLick}></button>}
-            </div>
-            <p className="movies__list-duration">{editedDuration}</p>
-        </li>
-        )
-
+      </div>
+      <a href={trailerLink} target="_blank" rel="noreferrer" className="movies__trailer-link">
+        <img className="movies__list-poster" alt={`Постер фильма "${name}"`} src={linkImage} />
+      </a>
+    </li>
+  );
 }
 
 export default MoviesCard;

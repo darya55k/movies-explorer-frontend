@@ -1,14 +1,14 @@
 import React from 'react'
 import './Preloader.css'
 
-const Preloader = (props) => {
+const Preloader = ({isActive, isAuth}) => {
     return (
-        <div className={`preloader ${props.isSearching ? '' : 'preloader__no-display'}`}>
-            <div className="preloader__container">
-                <span className="preloader__round"></span>
+        <div className={`preloader ${!isActive && 'preloader__inactive'} ${isAuth && 'preloader_small'}`}>
+            <div className={`preloader__container ${isAuth && 'preloader__container_small'}`}>
+                <span className={`preloader__round ${isAuth && 'preloader__round_small'}`}></span>
             </div>
         </div>
     )
 };
 
-export default Preloader;
+export default Preloader

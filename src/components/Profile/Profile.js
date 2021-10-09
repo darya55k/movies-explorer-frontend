@@ -1,43 +1,60 @@
 import React from "react";
-import './Profile.css';
+import { Link } from "react-router-dom";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import "./Profile.css";
 import Header from "../Header/Header";
-import {Link} from "react-router-dom";
+import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 
+function Profile({ loggedIn, onSignOut, onUpdateUser, serverResponse, isActive }) {
+    const { values, setValues, handleChange, errors, isValid } = useFormWithValidation();
+    const currentUser = React.useContext(CurrentUserContext);
+    const [isDisable, setIsDisable] = React.useState(false);
 
-function Profile(props) {
-    const [isFormDisabled, setIsFormDisabled] = React.useState(true);
+    React.useEffect(() => {
+        setValues(currentUser);
+    }, [currentUser, setValues]);
 
-    function handleEditProfileClick(e) {
+    const checkValuesInput = () => currentUser.name !== values.name || currentUser.email !== values.email;
+
+    function handleSubmit(e) {
+        const { name, email } = values;
+
         e.preventDefault();
-
-        setIsFormDisabled(false);
+        onUpdateUser(name, email);
+        setIsDisable(false);
     }
 
     return (
         <>
-            <Header loggedIn={props.loggedIn} />
+            <Header loggedIn={loggedIn} />
             <section className="profile">
-                <h2 className="profile__title">Привет, Дарья!</h2>
-                <form className="profile__form" >
+                <h2 className="profile__title">Привет, {currentUser.name}!</h2>
+                <form className="profile__form" name="profile" noValidate onSubmit={handleSubmit}>
                     <fieldset className="profile__fields">
                         <div className="profile__form-input">
                             <p className="profile__form-input-name">Имя</p>
-                            <input type="text" className="profile__form-input-field" placeholder="Дарья" disabled={isFormDisabled}/>
+                            <input value={values.name || ""} onChange={handleChange} type="text" name="name" className="profile__form-input-field" required minLength="2" maxLength="30" pattern="[a-zA-Zа-яА-ЯёЁ\- ]{1,}" />
                         </div>
                         <div className="profile__form-input">
                             <p className="profile__form-input-name">Email</p>
-                            <input type="text" className="profile__form-input-field" placeholder="email@mail.ru" disabled={isFormDisabled}/>
+                            <input value={values.email || ""} onChange={handleChange} className="profile__form-input-field" type="email" name="email" />
                         </div>
                     </fieldset>
-                    <span className={isFormDisabled ? 'profile__form-error no-display' : 'profile__form-error'}>При обновлении профиля произошла ошибка.</span>
-                    {isFormDisabled ? <button className="profile__button profile__button_type_edit" onClick={handleEditProfileClick}>Редактировать</button> :
-                        <button className="profile__button profile__button_type_save">Сохранить</button>}
+                    <span className="form__error profile__error">{errors.email}</span>
+                    <button className="profile__button profile__button_type_edit" tape="submit" aria-label="Редактировать" disabled={!isValid}>
+                        Редактировать
+                    </button>
                 </form>
-                <Link to="/" className={isFormDisabled ? 'profile__signout-link' : 'profile__signout-link no-display'}>Выйти из аккаунта</Link>
+                {!checkValuesInput() || isDisable ? (
+                    <Link to="/" className="profile__signout-link" onClick={onSignOut}>
+                        Выйти из аккаунта
+                    </Link>
+                ) : (
+                    ""
+                )}
             </section>
         </>
-
-    )
+    );
 }
 
 export default Profile;

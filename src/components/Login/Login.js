@@ -1,46 +1,49 @@
+import React from "react";
+import { Link } from "react-router-dom";
 import "./Login.css";
 import Logo from "../Logo/Logo";
-import {Link} from "react-router-dom";
-import React from "react";
-import {useFormWithValidation} from "../../utils/validation";
+import Preloader from "../Preloader/Preloader";
+import { useFormWithValidation } from "../../hooks/useFormWithValidation";
 
-function Login(props) {
-    const {values, handleChange, errors, isFormValid} = useFormWithValidation();
+function Login({ onLogin, serverResponse, isActive }) {
+    const { values, handleChange, errors, isValid, resetForm } = useFormWithValidation();
 
-    function handleLogin(e) {
+    function handleSubmit(e) {
+        const { email, password } = values;
+
         e.preventDefault();
-
-        props.onLogin(values.password, values.email);
-
-        props.onClear();
+        onLogin(email, password);
+        resetForm({}, {}, false);
     }
 
     return (
         <section className="login">
             <Logo />
+
             <h2 className="login__title auth__title">Рады видеть!</h2>
-            <form className="login__form auth__form" onSubmit={handleLogin} >
+            <form className="login__form auth__form" onSubmit={handleSubmit}>
                 <fieldset className="login__fields auth__fields">
                     <p className="login__input-name auth__input-name">E-mail</p>
-                    <input type="email" name="email" className="login__input auth__input"
-                           value={values.email || ''} onChange={handleChange}
-                           required disabled={props.isSaving}/>
+                    <input value={values.email || ""} onChange={handleChange} type="email" name="email" className="login__input auth__input" required />
                     <span className="login__error auth__error">{errors.email}</span>
+
                     <p className="login__input-name auth__input-name">Пароль</p>
-                    <input type="password" name="password" className="login__input auth__input"
-                           value={values.password || ''} onChange={handleChange}
-                           required minLength="8" disabled={props.isSaving}/>
+                    <input value={values.password || ""} onChange={handleChange} type="password" name="password" className="login__input auth__input" required minLength="8" />
                     <span className="login__error auth__error">{errors.password}</span>
                 </fieldset>
-                <span className="login__submit-error auth__submit-error">{props.errorMessage}</span>
-                <button type="submit" disabled={!isFormValid}
-                        className={`login__submit-button auth__submit-button ${isFormValid ? '' : 'auth__submit-button_disabled'}`}>
-                    Войти</button>
+                <p className="login__submit-error auth__submit-error">{serverResponse}</p>
+                <button type="submit" className="login__submit-button auth__submit-button" disabled={!isValid}>
+                    {isActive ? <Preloader isActive={isActive} isAuth={true} /> : "Войти"}
+                </button>
             </form>
-                <h3 className="login__subtitle auth__subtitle">Ещё не зарегистрированы?
-                    <Link className="login__link auth__link" to="/signup" onClick={props.onClear}>Регистрация</Link></h3>
+            <p className="login__subtitle auth__subtitle">
+                Ещё не зарегистрированы?{" "}
+                <Link to="/signup" className="login__link auth__link">
+                    Регистрация
+                </Link>
+            </p>
         </section>
-    )
+    );
 }
 
 export default Login;
