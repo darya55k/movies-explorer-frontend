@@ -1,0 +1,23 @@
+.header {
+  background-color: #073042;
+  display: flex;
+  padding: 18px 70px;
+  position: relative;
+}
+
+.header_type_white {
+  background-color: #FAFAFA;
+}
+
+@media(max-width: 1279px) {
+  .header {
+      padding: 18px 30px;
+  }
+}
+
+@media(max-width: 767px) {
+  .header {
+      padding: 18px 14px;
+  }
+  
+}
